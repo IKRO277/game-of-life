@@ -16,7 +16,7 @@ public class Main {
 
 
 
-
+        System.out.println("test");
         sc.close();
     }
 }
