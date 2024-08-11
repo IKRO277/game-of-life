@@ -15,43 +15,52 @@ public class UI {
     private int rows;
     private int cols;
 
-
+    // Construtor padrão da classe UI
     public UI() {
     }
 
+    // Método getter para obter o nome do jogador
     public String getPlayerName() {
         return playerName;
     }
 
+    // Método setter para definir o nome do jogador
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
 
+    // Método getter para obter a instância do objeto Chess
     public Chess getChess() {
         return chess;
     }
 
+    // Método setter para definir a instância do objeto Chess
     public void setChess(Chess chess) {
         this.chess = chess;
     }
 
+    // Método getter para obter o número de colunas do tabuleiro
     public int getCols() {
         return cols;
     }
 
+    // Método setter para definir o número de colunas do tabuleiro
     public void setCols(int cols) {
         this.cols = cols;
     }
 
+    // Método getter para obter o número de linhas do tabuleiro
     public int getRows() {
         return rows;
     }
 
+    // Método setter para definir o número de linhas do tabuleiro
     public void setRows(int rows) {
         this.rows = rows;
     }
 
-    public void printInstructions(Scanner sc) { // imprime as instruções e regras de jogo
+    // Método para imprimir as instruções do jogo e coletar o nome do jogador
+    public void printInstructions(Scanner sc) {
         System.out.print("Por favor informe seu nome: ");
         setPlayerName(sc.nextLine());
 
@@ -66,25 +75,35 @@ public class UI {
         System.out.println("-----------------------------------------------");
     }
 
-    public boolean validateParams(String[] args) { // caso falso, o parâmetro não passou na validação
+    // Método para validar os parâmetros de entrada fornecidos ao jogo
+    public boolean validateParams(String[] args) {
+        // Verifica se os parâmetros são nulos
         if(args == null) {
             return false;
-        } // valida se existe parâmetro
+        }
 
+        // Verifica se o número de parâmetros é exatamente 6
         if (args.length < 6 || args.length > 6) {
             return false;
-        } // valida se possui apenas a quantidade de dados esperados
+        }
 
         try {
+            // Verifica se os parâmetros possuem as letras corretas (w, h, g, s, p, n)
             for (int i = 0; i < args.length; i++) {
                 String actualParam[] = args[i].split("=");
                 String letter = actualParam[0];
 
-                if(!(i == 0 && Objects.equals(letter, "w") || (i == 1 && Objects.equals(letter, "h")) || (i == 2 && Objects.equals(letter, "g")) || (i == 3 && Objects.equals(letter, "s")) || (i == 4 && Objects.equals(letter, "p")) || (i == 5 && Objects.equals(letter, "n")) ) ) {
+                if(!(i == 0 && Objects.equals(letter, "w") ||
+                        (i == 1 && Objects.equals(letter, "h")) ||
+                        (i == 2 && Objects.equals(letter, "g")) ||
+                        (i == 3 && Objects.equals(letter, "s")) ||
+                        (i == 4 && Objects.equals(letter, "p")) ||
+                        (i == 5 && Objects.equals(letter, "n")) ) ) {
                     return false;
                 }
             }
 
+            // Valida os valores de cada parâmetro conforme regras específicas
             for (int i = 0; i < args.length; i++) {
                 String actualParam[] = args[i].split("=");
                 if(i != 4) {
@@ -107,7 +126,7 @@ public class UI {
                 }
                 if(i == 4) {
                     String[] string = actualParam[1].substring(1, actualParam[1].length() - 1).split("#"); // Faz uma subString tirando as aspas, e depois cria uma lista de String cortando os hashtags
-                    int rowParam = string[0].length(); //verifica se os as linhas de células são iguais
+                    int rowParam = string[0].length(); //verifica se as linhas de células são iguais
                     for(int j = 0; j < string.length; j++) {
                         if(string[j].length() != rowParam) {
                             return false;
@@ -126,11 +145,12 @@ public class UI {
 
         } catch(Exception e) {
             return false;
-        } // valida cada parãmetro um por um, verificando de a letra e o dado estão como esperados
+        }
 
         return true;
     }
 
+    // Método para adicionar os parâmetros validados ao objeto Chess
     public void addChessParams(String[] args) {
         String rowParams[] = args[0].split("=");
         setRows(Integer.parseInt(rowParams[1]));
@@ -141,10 +161,8 @@ public class UI {
         String generationParams[] = args[2].split("=");
         int generations = Integer.parseInt(generationParams[1]);
 
-
         String speedParams[] = args[3].split("=");
         int speed = Integer.parseInt(speedParams[1]);
-
 
         String populationParams[] = args[4].split("=");
         String[] population = populationParams[1].substring(1, populationParams[1].length() - 1).split("#");
@@ -156,23 +174,25 @@ public class UI {
         chess.generateCells(chess, neighborhood);
     }
 
-    public boolean generateChess(String[] args) throws InterruptedException { // filtra os parametros e instancia o mapa com todos os dados repassados
-
-        if(validateParams(args) == false) { // caso parâmetro falso, retorna falso
+    // Método principal para gerar o tabuleiro de xadrez a partir dos parâmetros
+    public boolean generateChess(String[] args) throws InterruptedException {
+        // Verifica se os parâmetros são válidos
+        if(validateParams(args) == false) {
             return false;
-        } else { //caso parâmetro True, gera o mapa nessa função
+        } else {
+            // Se válidos, adiciona os parâmetros ao objeto Chess
             addChessParams(args);
         }
 
+        // Simula a geração do mundo com um tempo de espera
         System.out.println("\nGerando mundo...");
-
         sleep(1500);
         System.out.println("Mundo gerado");
 
+        // Imprime o tabuleiro gerado
         System.out.println("-----------------------------------------------");
-        chess.printChess(); // função do próprio mapa que printa ele mesmo na tela
+        chess.printChess();
         System.out.println("-----------------------------------------------\n");
         return true;
     }
-
 }

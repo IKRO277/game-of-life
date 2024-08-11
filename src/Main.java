@@ -17,6 +17,7 @@ public class Main {
 
 
         System.out.println("test");
+        ui.generateChess(args);
         sc.close();
     }
 }
