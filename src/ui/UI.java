@@ -1,9 +1,7 @@
 package ui;
 
-import entities.Cell;
 import entities.Chess;
 
-import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -66,14 +64,14 @@ public class UI {
         System.out.println("-----------------------------------------------");
     }
 
-    public boolean validateParams(String[] args) { // caso falso, o parâmetro não passou na validação
+    public boolean validateParams(String[] args) {
         if(args == null) {
             return false;
-        } // valida se existe parâmetro
+        }
 
         if (args.length < 6 || args.length > 6) {
             return false;
-        } // valida se possui apenas a quantidade de dados esperados
+        }
 
         try {
             for (int i = 0; i < args.length; i++) {
@@ -132,35 +130,36 @@ public class UI {
     }
 
     public void addChessParams(String[] args) {
-        String rowParams[] = args[0].split("=");
+        String[] rowParams = args[0].split("=");
         setRows(Integer.parseInt(rowParams[1]));
 
-        String colParams[] = args[1].split("=");
+        String[] colParams = args[1].split("=");
         setCols(Integer.parseInt(colParams[1]));
 
-        String generationParams[] = args[2].split("=");
+        String[] generationParams = args[2].split("=");
         int generations = Integer.parseInt(generationParams[1]);
 
 
-        String speedParams[] = args[3].split("=");
+        String[] speedParams = args[3].split("=");
         int speed = Integer.parseInt(speedParams[1]);
 
 
-        String populationParams[] = args[4].split("=");
+        String[] populationParams = args[4].split("=");
         String[] population = populationParams[1].substring(1, populationParams[1].length() - 1).split("#");
 
-        String neighborhoodParams[] = args[5].split("=");
+        String[] neighborhoodParams = args[5].split("=");
         int neighborhood = Integer.parseInt(neighborhoodParams[1]);
 
         setChess(new Chess(rows, cols, generations, speed, population, neighborhood));
         chess.generateCells(chess, neighborhood);
+        chess.cellLife(5, 5);
     }
 
-    public boolean generateChess(String[] args) throws InterruptedException { // filtra os parametros e instancia o mapa com todos os dados repassados
+    public boolean generateChess(String[] args) throws InterruptedException {
 
-        if(validateParams(args) == false) { // caso parâmetro falso, retorna falso
+        if(!validateParams(args)) {
             return false;
-        } else { //caso parâmetro True, gera o mapa nessa função
+        } else {
             addChessParams(args);
         }
 
@@ -170,9 +169,13 @@ public class UI {
         System.out.println("Mundo gerado");
 
         System.out.println("-----------------------------------------------");
-        chess.printChess(); // função do próprio mapa que printa ele mesmo na tela
+        chess.printChess();
         System.out.println("-----------------------------------------------\n");
         return true;
     }
 
+    public void runChess(boolean activation) throws InterruptedException {
+        if (activation) chess.executeGameGol();
+        System.out.println("\nDados incompletos\n");
+    }
 }
