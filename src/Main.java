@@ -13,10 +13,6 @@ public class Main {
         UI ui = new UI();
         System.out.println(ui.validateParams(args));
         ui.addChessParams(args);
-
-
-
-        System.out.println("test");
         ui.generateChess(args);
         sc.close();
     }

@@ -8,6 +8,7 @@ public class Chess {
     private String[] populationRule;
     private int quantityGerations;
     private Cell[][] chess;
+    private int neigh;
 
     // Construtor da classe Chess que inicializa o tabuleiro com as dimensões e parâmetros fornecidos
     public Chess(int rows, int cols, int generations, int speedGenerations, String[] populationRule, int neighborhood) {
@@ -113,9 +114,9 @@ public class Chess {
             for (int j = 0; j < cols; j++) {
                 // Imprime "F" para células mortas e "T" para células vivas
                 if(chess[i][j].getLife() == false) {
-                    System.out.print("\uD83D\uDFE6 ");
+                    System.out.print("\uD83D\uDFE6 "); //Quadrado AZUL
                 } else {
-                    System.out.print("\uD83D\uDFE5 ");
+                    System.out.print("\uD83D\uDFE5 "); //Quadrado VERMELHO
                 }
             }
             System.out.println("}");
@@ -143,6 +144,29 @@ public class Chess {
             for (int j = 0; j < chess[i].length; j++) {
                 chess[i][j].setNeighborhood(neighborhood);
             }
+        }
+    }
+
+    public void executeGameGol() throws InterruptedException {
+        execGame(this.neigh);
+        for (int g = 0; g < generations; g++) {
+            if (this.neigh == 1){
+                for (int i = 0; i < chess.length; i++) {
+                    for (int j = 0; j < chess[i].length; j++) {
+                        chess[i][j].cellNeighborhoodOne();
+                    }
+                }
+            } else if (this.neigh == 2) {
+                for (int i = 0; i < chess.length; i++) {
+                    for (int j = 0; j < chess[i].length; j++) {
+                        chess[i][j].cellNeighborhoodTwo();
+                    }
+                }
+            }
+            System.out.println(getGenerations());
+            printChess();
+            System.out.println();
+            Thread.sleep(speedGenerations);
         }
     }
 }

@@ -16,7 +16,9 @@ public class UI {
     private int cols;
 
     // Construtor padrão da classe UI
-    public UI() {
+    public UI(
+
+    ) {
     }
 
     // Método getter para obter o nome do jogador
@@ -186,12 +188,11 @@ public class UI {
 
         // Simula a geração do mundo com um tempo de espera
         System.out.println("\nGerando mundo...");
-        sleep(1500);
         System.out.println("Mundo gerado");
 
         // Imprime o tabuleiro gerado
         System.out.println("-----------------------------------------------");
-        chess.printChess();
+        chess.executeGameGol();
         System.out.println("-----------------------------------------------\n");
         return true;
     }
