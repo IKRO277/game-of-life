@@ -50,11 +50,11 @@ public class UI {
     }
 
     public void printInstructions(Scanner sc) { // imprime as instruções e regras de jogo
-        System.out.print("Por favor informe seu nome: ");
-        setPlayerName(sc.nextLine());
+        //System.out.print("Por favor informe seu nome: ");
+        //setPlayerName(sc.nextLine());
 
         System.out.println("\n-------  Game of Life  -------\n\nINSTRUÇÕES BÁSICAS:");
-        System.out.println("Célula viva:  o\nCélula morta: -\n - Você informará quais células estarão vivas e mortas");
+        System.out.println("Célula viva: \uD83D\uDFE6\nCélula morta: " + "\uD83D\uDFE5" + "\n - Você informará quais células estarão vivas e mortas");
         System.out.println("-----------------------------------------------");
         System.out.println("CONDIÇÕES GERAIS:\nSobrevivência: permanece vivo se tiver 2 ou 3 vizinhos\n" +
                 "Morte: Se a célula tiver menos de 2 vizinhos(subpopulação) ou mais de 3 vizinhos(superpopulação).");
@@ -69,54 +69,43 @@ public class UI {
             return false;
         }
 
-        if (args.length < 6 || args.length > 6) {
+        if (args.length != 6) {
             return false;
         }
 
         try {
             for (int i = 0; i < args.length; i++) {
-                String actualParam[] = args[i].split("=");
+                String[] actualParam = args[i].split("=");
                 String letter = actualParam[0];
 
-                if(!(i == 0 && Objects.equals(letter, "w") || (i == 1 && Objects.equals(letter, "h")) || (i == 2 && Objects.equals(letter, "g")) || (i == 3 && Objects.equals(letter, "s")) || (i == 4 && Objects.equals(letter, "p")) || (i == 5 && Objects.equals(letter, "n")) ) ) {
-                    return false;
-                }
+                switch (i) {
+                    case 0: if (!(Objects.equals(letter, "w"))) return false; break;
+                    case 1: if (!(Objects.equals(letter, "h"))) return false; break;
+                    case 2: if (!(Objects.equals(letter, "g"))) return false; break;
+                    case 3: if (!(Objects.equals(letter, "s"))) return false; break;
+                    case 4: if (!(Objects.equals(letter, "p"))) return false; break;
+                    case 5: if (!(Objects.equals(letter, "n"))) return false; break;
+                    default: return false;
+                } // verifica se as letras presentes são as esperadas
+
             }
 
             for (int i = 0; i < args.length; i++) {
-                String actualParam[] = args[i].split("=");
+                String[] actualParam = args[i].split("=");
                 if(i != 4) {
                     int integerParam = Integer.parseInt(actualParam[1]);
-                    if(i != 5 && integerParam < 0) {
-                        return false;
-                    }
-                    if (i == 5 && (integerParam < 1 || integerParam > 5)) {
-                        return false;
-                    }
-                    if(i == 0 && integerParam != 10 && integerParam != 20 && integerParam != 40 && integerParam != 80) {
-                        return false;
-                    }
-                    if(i == 1 && integerParam != 10 && integerParam != 20 && integerParam != 40) {
-                        return false;
-                    }
-                    if(i == 3 && (integerParam < 300 || integerParam > 1000)) {
-                        return false;
-                    }
+                    if(i != 5 && integerParam < 0) return false;
+                    if (i == 5 && (integerParam < 1 || integerParam > 5)) return false;
+                    if(i == 0 && integerParam != 10 && integerParam != 20 && integerParam != 40 && integerParam != 80) return false;
+                    if(i == 1 && integerParam != 10 && integerParam != 20 && integerParam != 40) return false;
+                    if(i == 3 && (integerParam < 300 || integerParam > 1000)) return false;
                 }
                 if(i == 4) {
-                    String[] string = actualParam[1].substring(1, actualParam[1].length() - 1).split("#"); // Faz uma subString tirando as aspas, e depois cria uma lista de String cortando os hashtags
-                    int rowParam = string[0].length(); //verifica se os as linhas de células são iguais
-                    for(int j = 0; j < string.length; j++) {
-                        if(string[j].length() != rowParam) {
-                            return false;
-                        }
-                    }
-                    for (int k = 0; k < string.length; k++) { // verifica se só possuem 0 e 1
-                        String[] binaryString = string[k].split("");
-                        for(int j = 0; j < binaryString.length; j++) {
-                            if(Integer.parseInt(binaryString[j]) != 0 && Integer.parseInt(binaryString[j]) != 1) {
-                                return false;
-                            }
+                    String[] string = actualParam[1].substring(1, actualParam[1].length() - 1).split("#");
+                    for (String s : string) {
+                        String[] binaryString = s.split("");
+                        for (String value : binaryString) {
+                            if (Integer.parseInt(value) != 0 && Integer.parseInt(value) != 1) return false;
                         }
                     }
                 }
@@ -124,7 +113,7 @@ public class UI {
 
         } catch(Exception e) {
             return false;
-        } // valida cada parãmetro um por um, verificando de a letra e o dado estão como esperados
+        }
 
         return true;
     }
