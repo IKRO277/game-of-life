@@ -11,12 +11,10 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         UI ui = new UI();
-        System.out.println(ui.validateParams(args));
+
         ui.addChessParams(args);
+        ui.runChess(ui.generateChess(args));
 
-
-
-        System.out.println("test");
         sc.close();
     }
 }
