@@ -101,17 +101,13 @@ public class Chess {
     }
 
     public void cellLife(int xCell, int yCell) {
-        for (Cell[] cells : chess) {
-            for (int j = 0; j < cells.length; j++) {
-                chess[yCell][xCell].setLife(true);
-                chess[yCell - 1][xCell].setLife(true);
-                chess[yCell + 1][xCell].setLife(true);
-                chess[yCell][xCell - 1].setLife(true);
-                chess[yCell][xCell + 1].setLife(true);
-                chess[yCell - 1][xCell - 1].setLife(true);
-                chess[yCell - 1][xCell + 1].setLife(true);
-                chess[yCell + 1][xCell - 1].setLife(true);
-                chess[yCell + 1][xCell + 1].setLife(true);
+        for (int i = 0; i < populationRule.length; i++) {
+            String[] populationRow = populationRule[i].split("");
+            for (int j = 0; j < populationRow.length; j++) {
+                String populationCol = populationRow[j];
+                if(Integer.parseInt(populationCol) == 1) {
+                    chess[i + 4][j + 5].setLife(true);
+                }
             }
         }
     }
@@ -146,7 +142,7 @@ public class Chess {
             System.out.println();
 
             Thread.sleep(speedGenerations);
-            }
+        }
     }
 
 }
