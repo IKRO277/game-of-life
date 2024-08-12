@@ -1,29 +1,19 @@
 package ui;
 
 import entities.Chess;
-import security.Security;
 
-import java.util.Objects;
+import security.ValidateChessParams;
 import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
 
 public class UI {
-    private String playerName;
     private Chess chess;
     private int rows;
     private int cols;
 
 
     public UI() {
-    }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 
     public Chess getChess() {
@@ -50,15 +40,15 @@ public class UI {
         this.rows = rows;
     }
 
-    public void printInstructions(Scanner sc) { // imprime as instruções e regras de jogo
-        //System.out.print("Por favor informe seu nome: ");
-        //setPlayerName(sc.nextLine());
+    public void printInstructions(Scanner sc) {
 
         System.out.println("\n-------  Game of Life  -------\n\nINSTRUÇÕES BÁSICAS:");
         System.out.println("Célula viva: \uD83D\uDFE6\nCélula morta: " + "\uD83D\uDFE5" + "\n - Você informará quais células estarão vivas e mortas");
         System.out.println("-----------------------------------------------");
-        System.out.println("CONDIÇÕES GERAIS:\nSobrevivência: permanece vivo se tiver 2 ou 3 vizinhos\n" +
-                "Morte: Se a célula tiver menos de 2 vizinhos(subpopulação) ou mais de 3 vizinhos(superpopulação).");
+        System.out.println("""
+                CONDIÇÕES GERAIS:
+                Sobrevivência: permanece vivo se tiver 2 ou 3 vizinhos
+                Morte: Se a célula tiver menos de 2 vizinhos(subpopulação) ou mais de 3 vizinhos(superpopulação).""");
         System.out.print("Digite qualquer coisa para continuar --> ");
         sc.nextLine();
 
@@ -79,28 +69,42 @@ public class UI {
         String[] speedParams = args[3].split("=");
         int speed = Integer.parseInt(speedParams[1]);
 
+        String[] population;
 
-        String[] populationParams = args[4].split("=");
-        String[] population = populationParams[1].substring(1, populationParams[1].length() - 1).split("#");
+        if(args[4].split("=").length == 2) {
+            String[] populationParams = args[4].split("=");
+            population = populationParams[1].split("#");
+        } else {
+            population = new String[1];
+            population[0] = "random";
+            System.out.println(population[0]);
+        }
+
+
 
         String[] neighborhoodParams = args[5].split("=");
-        int neighborhood = Integer.parseInt(neighborhoodParams[1]);
+        int neighborhood;
+        if(neighborhoodParams.length == 2) {
+            neighborhood = Integer.parseInt(neighborhoodParams[1]);
+        } else {
+            neighborhood = 3;
+        }
+
 
         setChess(new Chess(rows, cols, generations, speed, population, neighborhood));
-        chess.generateCells(chess, neighborhood);
-        chess.cellLife(5, 5);
+        if(chess.getPopulationRule()[0] != "random") {
+            chess.generateCells(chess);
+            chess.cellLife();
+        } else {
+            chess.generateRandomCells(chess);
+        }
     }
 
     public boolean generateChess(String[] args) throws InterruptedException {
-
-        if(!Security.validateParams(args)) {
-            return false;
-        } else {
-            addChessParams(args);
-        }
+        if(!ValidateChessParams.validateParams((args))) return false;
+        else addChessParams(args);
 
         System.out.println("\nGerando mundo...");
-
         sleep(1500);
         System.out.println("Mundo gerado");
 
