@@ -1,5 +1,3 @@
-
-
 import ui.UI;
 
 import java.util.Locale;
@@ -9,12 +7,10 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         Locale.setDefault(Locale.US);
         Scanner sc = new Scanner(System.in);
-
         UI ui = new UI();
-
         ui.addChessParams(args);
+        ui.printInstructions(sc);
         ui.runChess(ui.generateChess(args));
-
         sc.close();
     }
 }
