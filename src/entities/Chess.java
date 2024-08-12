@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.Random;
+
 public class Chess {
     private int rows;
     private int cols;
@@ -18,7 +20,7 @@ public class Chess {
         this.populationRule = populationRule;
         this.chess = new Cell[rows][cols];
         this.neighborhood = neighborhood;
-        generateCells(this, neighborhood); // Gera as células iniciais no tabuleiro
+        generateCells(this); // Gera as células iniciais no tabuleiro
     }
 
     public Cell[][] getChess() {
@@ -81,10 +83,19 @@ public class Chess {
         chess[row][col] = cell;
     }
 
-    public void generateCells(Chess chess, int neighborhood) {
+    public void generateCells(Chess chess) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 chess.setCell(i, j, new Cell(false, i, j, this.chess));
+            }
+        }
+    }
+
+    public void generateRandomCells(Chess chess) {
+        Random random = new Random();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                chess.setCell(i, j, new Cell(random.nextBoolean(), i, j, this.chess));
             }
         }
     }
@@ -98,23 +109,40 @@ public class Chess {
             }
             System.out.println("}");
         }
+        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
-    public void cellLife(int xCell, int yCell) {
+    public void cellLife() {
         for (int i = 0; i < populationRule.length; i++) {
             String[] populationRow = populationRule[i].split("");
             for (int j = 0; j < populationRow.length; j++) {
                 String populationCol = populationRow[j];
-                if(Integer.parseInt(populationCol) == 1) {
-                    chess[i + 4][j + 5].setLife(true);
-                }
+                if(Integer.parseInt(populationCol) == 1) chess[i + 4][j + 5].setLife(true);
             }
         }
+    }
+
+    public Cell[][] generateNextChess(Cell[][] nextChess) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                chess[i][j].setNeighborhood(0);
+                boolean newLifeState = switch (neighborhood) {
+                    case 1 -> chess[i][j].cellNeighborhoodOne();
+                    case 2 -> chess[i][j].cellNeighborhoodTwo();
+                    case 4 -> chess[i][j].cellNeighborhoodFour();
+                    case 5 -> chess[i][j].cellNeighborhoodFive();
+                    default -> chess[i][j].cellNeighborhoodThree();
+                };
+                nextChess[i][j].setLife(newLifeState);
+            }
+        }
+        return nextChess;
     }
 
     public void executeGameGol() throws InterruptedException {
 
         for (int g = 0; g < generations; g++) {
+
             Cell[][] nextChess = new Cell[rows][cols];
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
@@ -122,26 +150,13 @@ public class Chess {
                 }
             }
 
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    chess[i][j].setNeighborhood(0);
-                    boolean newLifeState = switch (neighborhood) {
-                        case 1 -> chess[i][j].cellNeighborhoodOne();
-                        case 2 -> chess[i][j].cellNeighborhoodTwo();
-                        case 4 -> chess[i][j].cellNeighborhoodFour();
-                        case 5 -> chess[i][j].cellNeighborhoodFive();
-                        default -> chess[i][j].cellNeighborhoodThree();
-                    };
-                    nextChess[i][j].setLife(newLifeState);
-                }
-            }
-
-            setChess(nextChess);
+            setChess(generateNextChess(nextChess));
             System.out.println("Geração: " + g);
             printChess();
             System.out.println();
 
             Thread.sleep(speedGenerations);
+            System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         }
     }
 
