@@ -3,14 +3,9 @@ package entities;
 import java.util.Random;
 
 public class Chess {
-    private int rows;
-    private int cols;
-    private int generations;
-    private int speedGenerations;
+    private int rows, cols, generations, speedGenerations, quantityGenerations, neighborhood;
     private String[] populationRule;
-    private int quantityGenerations;
     private Cell[][] chess;
-    private final int neighborhood;
 
     public Chess(int rows, int cols, int generations, int speedGenerations, String[] populationRule, int neighborhood) {
         this.rows = rows;
@@ -20,7 +15,7 @@ public class Chess {
         this.populationRule = populationRule;
         this.chess = new Cell[rows][cols];
         this.neighborhood = neighborhood;
-        generateCells(this); // Gera as células iniciais no tabuleiro
+        generateCells(this); //
     }
 
     public Cell[][] getChess() {
