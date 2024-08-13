@@ -2,10 +2,8 @@ package entities;
 
 public class Cell {
     private Boolean life;
-    private Integer row;
-    private Integer col;
+    private Integer row, col, neighborhoodQuantity = 0;
     private Cell[][] chess;
-    private int neighborhoodQuantity = 0;
 
     public Cell(Boolean life,  Integer row, Integer col, Cell[][] chess) {
         this.life = life;
