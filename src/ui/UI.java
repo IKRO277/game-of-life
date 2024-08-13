@@ -3,15 +3,14 @@ package ui;
 import entities.Chess;
 
 import security.ValidateChessParams;
+
 import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
 
 public class UI {
     private Chess chess;
-    private int rows;
-    private int cols;
-
+    private int rows, cols;
 
     public UI() {
     }
@@ -43,7 +42,10 @@ public class UI {
     public void printInstructions(Scanner sc) {
 
         System.out.println("\n-------  Game of Life  -------\n\nINSTRUÇÕES BÁSICAS:");
-        System.out.println("Célula viva: \uD83D\uDFE6\nCélula morta: " + "\uD83D\uDFE5" + "\n - Você informará quais células estarão vivas e mortas");
+        System.out.println("""
+                Célula viva: \uD83D\uDFE6
+                Célula morta: \uD83D\uDFE5
+                 - Você informará quais células estarão vivas e mortas""");
         System.out.println("-----------------------------------------------");
         System.out.println("""
                 CONDIÇÕES GERAIS:
@@ -65,38 +67,34 @@ public class UI {
         String[] generationParams = args[2].split("=");
         int generations = Integer.parseInt(generationParams[1]);
 
-
         String[] speedParams = args[3].split("=");
         int speed = Integer.parseInt(speedParams[1]);
 
+        try { createChess(addAndValidateChessParams(generations, speed, args)); } catch (Exception e) {System.out.println("Dados inválidos");}
+    }
+
+    public Chess addAndValidateChessParams(int generations, int speed, String[] args) {
         String[] population;
 
-        if(args[4].split("=").length == 2) {
-            String[] populationParams = args[4].split("=");
-            population = populationParams[1].split("#");
-        } else {
-            population = new String[1];
-            population[0] = "random";
-            System.out.println(population[0]);
-        }
+        String[] populationParams = args[4].split("=");
 
-
+        if (populationParams.length == 2) population = populationParams[1].split("#");
+        else population = new String[]{"random"};
 
         String[] neighborhoodParams = args[5].split("=");
         int neighborhood;
-        if(neighborhoodParams.length == 2) {
-            neighborhood = Integer.parseInt(neighborhoodParams[1]);
-        } else {
-            neighborhood = 3;
-        }
+        if(neighborhoodParams.length == 2) neighborhood = Integer.parseInt(neighborhoodParams[1]);
+        else neighborhood = 3;
 
+        return new Chess(rows, cols, generations, speed, population, neighborhood);
+    }
 
-        setChess(new Chess(rows, cols, generations, speed, population, neighborhood));
-        if(chess.getPopulationRule()[0] != "random") {
+    public void createChess(Chess chess) {
+        setChess(chess);
+        if("random".equals(chess.getPopulationRule()[0])) chess.generateRandomCells(chess);
+        else {
             chess.generateCells(chess);
             chess.cellLife();
-        } else {
-            chess.generateRandomCells(chess);
         }
     }
 
