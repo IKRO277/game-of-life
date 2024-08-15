@@ -1,12 +1,9 @@
 package ui;
 
 import entities.Chess;
-
-import security.ValidateChessParams;
-
-import java.util.Scanner;
-
 import static java.lang.Thread.sleep;
+import java.util.Scanner;
+import security.ValidateChessParams;
 
 public class UI {
     private Chess chess;
@@ -113,7 +110,20 @@ public class UI {
     }
 
     public void runChess(boolean activation) throws InterruptedException {
-        if (activation) chess.executeGameGol();
+        if (activation){
+            chess.executeGameGol();
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("\nDeseja continuar jogando? (s/n)");
+            String response = scanner.nextLine();
+            if ("s".equalsIgnoreCase(response)) {
+                System.out.println("Reiniciando o jogo...\n");
+                runChess(true);
+            } else {
+                System.out.println("Encerrando o jogo.");
+            }
+        } else {
         System.out.println("\nDados incompletos\n");
+        }
     }
+
 }
