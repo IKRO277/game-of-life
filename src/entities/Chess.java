@@ -1,11 +1,13 @@
 package entities;
 
 import java.util.Random;
+import ui.UI;
 
 public class Chess {
     private int rows, cols, generations, speedGenerations, quantityGenerations, neighborhood;
     private String[] populationRule;
     private Cell[][] chess;
+    private UI ui;
 
     public Chess(int rows, int cols, int generations, int speedGenerations, String[] populationRule, int neighborhood) {
         this.rows = rows;
@@ -15,7 +17,8 @@ public class Chess {
         this.populationRule = populationRule;
         this.chess = new Cell[rows][cols];
         this.neighborhood = neighborhood;
-        generateCells(this); //
+        this.ui = ui; // Adicionando e atribuindo o UI ao atributo da classe
+        generateCells(this); 
     }
 
     public Cell[][] getChess() {
@@ -95,16 +98,8 @@ public class Chess {
         }
     }
 
-    public void printChess()  {
-        for (int i = 0; i < rows; i++) {
-            System.out.print("{ ");
-            for (int j = 0; j < cols; j++) {
-                if (!chess[i][j].getLife()) System.out.print("\uD83D\uDFE6 ");
-                else System.out.print("\uD83D\uDFE5 ");
-            }
-            System.out.println("}");
-        }
-        System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    public void printChess()  { // Parâmetro para ser possivel a impressão p/ a UI
+        ui.printChess(chess, rows, cols);
     }
 
     public void cellLife() {
@@ -135,23 +130,18 @@ public class Chess {
     }
 
     public void executeGameGol() throws InterruptedException {
-
         for (int g = 0; g < generations; g++) {
-
             Cell[][] nextChess = new Cell[rows][cols];
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
                     nextChess[i][j] = new Cell(false, i, j, nextChess);
                 }
             }
-
             setChess(generateNextChess(nextChess));
             System.out.println("Geração: " + g);
             printChess();
             System.out.println();
-
             Thread.sleep(speedGenerations);
-            System.out.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         }
     }
 

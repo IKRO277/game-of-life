@@ -1,5 +1,6 @@
 package ui;
 
+import entities.Cell;
 import entities.Chess;
 import static java.lang.Thread.sleep;
 import java.util.Scanner;
@@ -72,7 +73,6 @@ public class UI {
 
     public Chess addAndValidateChessParams(int generations, int speed, String[] args) {
         String[] population;
-
         String[] populationParams = args[4].split("=");
 
         if (populationParams.length == 2) population = populationParams[1].split("#");
@@ -107,6 +107,18 @@ public class UI {
         chess.printChess();
         System.out.println("-----------------------------------------------\n");
         return true;
+    }
+
+    public void printChess(Cell[][] chess, int rows, int cols){
+        for (int i = 0; i < rows; i++){
+            System.out.println("{");
+            for (int j = 0; j < cols; j++) {
+                if(!chess[i][j].getLife()) System.out.println("\\uD83D\\uDFE6 ");
+                else System.out.println("\\uD83D\\uDFE5 ");
+            }
+            System.out.println("}");
+        }
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
     public void runChess(boolean activation) throws InterruptedException {
